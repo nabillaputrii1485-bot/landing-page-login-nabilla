@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landing Page Login Nabilla</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efff;--ink:#1f1a38;--muted:#6a6486;--brand:#5b3df5;--brand-d:#4328c9;--card:#fff;--line:#ddd6f7;--ok:#16794a;--err:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#15122b;--ink:#f1eeff;--muted:#a9a2cc;--brand:#8b73ff;--brand-d:#a493ff;--card:#201c3d;--line:#38325f;--ok:#5fd39b;--err:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{padding:clamp(2rem,6vw,5rem);display:flex;flex-direction:column;justify-content:center;gap:1.25rem}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-weight:800;font-size:clamp(2.4rem,5vw,4.2rem);line-height:1.05;margin:0;max-width:12ch}
+.hero p{color:var(--muted);font-size:1.1rem;line-height:1.6;max-width:44ch;margin:0}
+.hero small{color:var(--muted)}
+.panel{display:flex;align-items:center;justify-content:center;padding:2rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2rem;width:100%;max-width:400px;box-shadow:0 18px 50px rgba(91,61,245,.15)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:1.5rem}
+.tabs button{border:0;background:none;padding:.65rem;border-radius:9px;font:700 1rem 'Nunito',sans-serif;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--card);color:var(--brand);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+form{display:none;flex-direction:column;gap:1rem}
+form.active{display:flex}
+label{font-weight:600;font-size:.92rem;display:flex;flex-direction:column;gap:.35rem}
+input{font:inherit;padding:.75rem .9rem;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input:focus{outline:3px solid color-mix(in srgb,var(--brand) 40%,transparent);border-color:var(--brand)}
+.submit{border:0;background:var(--brand);color:#fff;padding:.85rem;border-radius:10px;font:700 1rem 'Nunito',sans-serif;cursor:pointer}
+.submit:hover{background:var(--brand-d)}
+.msg{min-height:1.3rem;font-size:.92rem;font-weight:600;margin:0}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+@media(max-width:820px){body{grid-template-columns:1fr}.hero{padding-bottom:0}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <h1>Belajar microservices, satu container sekali.</h1>
+  <p>Landing page ini dibungkus dengan Docker (PHP 8.2 + Apache), disimpan di GitHub, dan dibagikan lewat Docker Hub.</p>
+  <small>Dibuat oleh Nabilla Putri Insani</small>
+</section>
+<section class="panel">
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-login" aria-selected="true" aria-controls="login">Masuk</button>
+      <button role="tab" id="tab-register" aria-selected="false" aria-controls="register">Daftar</button>
+    </div>
+    <form id="login" class="active" novalidate>
+      <label>Email<input type="email" name="email" autocomplete="email" required></label>
+      <label>Kata sandi<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="submit" type="submit">Masuk</button>
+      <p class="msg" role="status"></p>
+    </form>
+    <form id="register" novalidate>
+      <label>Nama lengkap<input type="text" name="nama" autocomplete="name" required></label>
+      <label>Email<input type="email" name="email" autocomplete="email" required></label>
+      <label>Kata sandi (minimal 6 karakter)<input type="password" name="password" autocomplete="new-password" minlength="6" required></label>
+      <button class="submit" type="submit">Buat akun</button>
+      <p class="msg" role="status"></p>
+    </form>
+  </div>
+</section>
+<script>
+const tabs=[...document.querySelectorAll('.tabs button')];
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(b=>b.setAttribute('aria-selected',b===t));
+  document.querySelectorAll('form').forEach(f=>f.classList.toggle('active',f.id===t.getAttribute('aria-controls')));
+}));
+document.querySelectorAll('form').forEach(f=>f.addEventListener('submit',e=>{
+  e.preventDefault();
+  const m=f.querySelector('.msg');
+  if(!f.checkValidity()){m.className='msg err';m.textContent='Lengkapi semua kolom dengan benar.';return;}
+  m.className='msg ok';
+  m.textContent=f.id==='login'?'Berhasil masuk (demo, belum terhubung database).':'Akun berhasil dibuat (demo, belum terhubung database).';
+  f.reset();
+}));
+</script>
+</body>
+</html>
